@@ -1,1 +1,1 @@
-Alx Sorting Algorithm
+ALX sorting Algorithms
