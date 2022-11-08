@@ -24,4 +24,5 @@ void quick_sort(int *array, size_t size);
 void counting_sort(int *array, size_t size);
 void merge(int *array, int low, int middle, int high, int *temp);
 void shell_sort(int *array, size_t size);
+void swapem(listint_t *l, listint_t *r, listint_t **h);
 #endif /* SORT_H */
