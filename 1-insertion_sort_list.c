@@ -1,38 +1,55 @@
 #include "sort.h"
-#include <stdio.h>
 
 /**
- * insertion_sort_list - Sort a doubly linked list of integers in ascending
- * order using the Insertion sort algorithm.
- *
- * @list: Address of head node of the linked list to sort
- */
+* swapem - Swaps tha nodes
+* @l: left or lower node
+* @r: right or later node
+* @h: Head of dlist
+*/
+
+void swapem(listint_t *l, listint_t *r, listint_t **h)
+{
+	listint_t *temp;
+
+	temp = l->prev;
+	if (temp)
+		temp->next = r;
+	r->prev = temp;
+	l->prev = r;
+	l->next = r->next;
+	r->next = l;
+	if (l->next != NULL)
+		l->next->prev = l;
+	if (r->prev == NULL)
+		*h = r;
+	print_list(*h);
+}
+
+/**
+* insertion_sort_list - sorts a doubly linked list of integers
+* @list: Head of dlist
+*/
+
 void insertion_sort_list(listint_t **list)
 {
-	listint_t *end, *a, *b;
+	listint_t *curr, *next, *prev, *prev2;
 
-	if (!list || !*list)
+	if (list == NULL)
 		return;
 
-	for (end = (*list)->next; end;)
+	curr = next = *list;
+	while (curr != NULL)
 	{
-		a = end->prev;
-		b = end;
-		end = end->next;
-		while (a && a->n > b->n)
+		while (curr->prev != NULL)
 		{
-			if (a->prev == NULL)
-				*list = b;
-			else
-				a->prev->next = b;
-			if (b->next)
-				b->next->prev = a;
-			b->prev = a->prev;
-			a->next = b->next;
-			a->prev = b;
-			b->next = a;
-			print_list(*list);
-			a = b->prev;
+			prev = curr->prev;
+			prev2 = prev;
+			if (prev->n > curr->n)
+				swapem(prev, curr, list);
+			curr = prev2;
 		}
+		curr = next->next;
+		next = curr;
 	}
+
 }

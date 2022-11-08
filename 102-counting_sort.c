@@ -1,74 +1,75 @@
 #include "sort.h"
-#include <stdlib.h>
 
 /**
- * max - Return the largest integer in an 'array'
- * @array: array
- * @size: size of array
- * Return: largest integer in 'array'
- */
-int max(int *array, size_t size)
-{
-	size_t i;
-	int max = 0;
+* findmax - Finds the maximum value in an array
+* @array: array to find max value of
+* @size: Size of array
+* Return: Largest value
+*/
 
-	for (i = 0; i < size; i++)
+int findmax(int *array, size_t size)
+{
+	int i, max = 0;
+
+	for (i = 0; i < (int)size; i++)
 	{
-		if (array[i] > max)
+		if (max < array[i])
 			max = array[i];
 	}
-
 	return (max);
 }
 
 /**
- * counting_sort - Sort an array of integers in ascending order using the
- * Counting sort algorithm.
- *
- * Array is assumed to contain only positive integers
- * @array: array
- * @size: size of array
- */
+* count - Counts number of occurences of value in an array
+* @array: Array to count values of
+* @size: Size of array
+* @val: Value to count in the array
+* Return: Count of va
+*/
+
+int count(int *array, size_t size, int val)
+{
+	int c = 0, i;
+
+	for (i = 0; i < (int)size; i++)
+	{
+		if (array[i] == val)
+			c++;
+	}
+	return (c);
+}
+
+/**
+* counting_sort - sorts array using counting algorithm
+* @array: Array to sort
+* @size: Size of array
+*/
+
 void counting_sort(int *array, size_t size)
 {
-	size_t i, count_range;
-	int *sorted, *count;
+	int max, *ca, i, *out, j;
 
-	/* Nothing to do if array is NULL or size < 2 */
-	if (!array || size < 2)
+	if (array == NULL || size < 2)
 		return;
-	/* Find largest integer in array */
-	count_range = max(array, size) + 1;
-	if (count_range < 2)
+	max = findmax(array, size);
+	out = malloc(sizeof(int) * (int)size);
+	ca = malloc(sizeof(int) * (max + 1));
+	if (ca == NULL || out == NULL)
 		return;
-	/* Create count array */
-	count = calloc(count_range, sizeof(int));
-	if (!count)
-		return;
-	/* Histogram */
-	for (i = 0; i < size; i++)
-		count[array[i]]++;
-	/* Cumulative sum */
-	for (i = 0; (i + 1) < count_range; i++)
-		count[i + 1] += count[i];
-	print_array(count, count_range);
-	/* Create sorted array */
-	sorted = malloc(size * sizeof(int));
-	if (!sorted)
-		return;
-	/* Copy each element of 'array' into 'sorted' */
-	/* 'count' returns the index to place array[i] in 'sorted' */
-	for (i = 0; i < size; i++)
+	for (i = j = 0; i < max + 1; i++)
 	{
-		/* Indicies in 'count' begin at 1, not 0, so subtract 1 */
-		sorted[count[array[i]] - 1] = array[i];
-		/* Once an index in count is used, decrement the value */
-		count[array[i]]--;
+		j += count(array, size, i);
+		ca[i] = j;
 	}
-	/* Copy sorted array into original array */
-	for (i = 0; i < size; i++)
-		array[i] = sorted[i];
-	/* Free the malloc'd arrays */
-	free(sorted);
-	free(count);
+	print_array(ca, max + 1);
+	for (i = 0; i < (int)size; i++)
+	{
+		out[ca[array[i]] - 1] = array[i];
+		ca[array[i]] -= 1;
+	}
+	for (i = 0; i < (int)size; i++)
+		array[i] = out[i];
+
+	free(out);
+	free(ca);
 }
