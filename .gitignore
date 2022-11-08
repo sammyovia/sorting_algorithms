@@ -1,4 +1,0 @@
-/* Ignore all main.c files */
-*main.c
-/* All files without xtn*/
-*.*
